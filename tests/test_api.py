@@ -431,6 +431,26 @@ async def test_get_first_with_total_not_found(
     assert result == (None, None, True)
 
 
+async def test_get_first_with_total_merges_extra_params(
+    client: GitLabClient, mock_api: aioresponses
+) -> None:
+    """Extra params (e.g. state=opened for merge_requests) are merged into the request,
+    matching how the coordinator actually calls this for open-only merge requests."""
+    mock_api.get(
+        f"{API}/projects/{TEST_PROJECT_ID}/merge_requests?per_page=1&state=opened",
+        payload=[],
+        headers={"x-total": "0"},
+    )
+
+    result = await client.async_get_first_with_total(
+        TEST_PROJECT_ID, "merge_requests", {"state": "opened"}
+    )
+
+    assert result == (None, 0, True)
+    url = _single_request_url(mock_api)
+    assert dict(url.query) == {"per_page": "1", "state": "opened"}
+
+
 # ----------------------------------------------------------------------
 # async_get_first
 # ----------------------------------------------------------------------
@@ -452,6 +472,27 @@ async def test_get_first_returns_first_item(
     url = _single_request_url(mock_api)
     assert url.path == f"/api/v4/projects/{TEST_PROJECT_ID}/repository/commits"
     assert dict(url.query) == {"per_page": "1"}
+
+
+async def test_get_first_merges_extra_params(
+    client: GitLabClient, mock_api: aioresponses
+) -> None:
+    """Extra params (e.g. order_by/sort for deployments) are merged into the request,
+    matching how the coordinator calls this for the latest deployment."""
+    items: list[dict[str, Any]] = [{"id": "abc", "environment": "production"}]
+    mock_api.get(
+        f"{API}/projects/{TEST_PROJECT_ID}/deployments"
+        "?per_page=1&order_by=created_at&sort=desc",
+        payload=items,
+    )
+
+    result = await client.async_get_first(
+        TEST_PROJECT_ID, "deployments", {"order_by": "created_at", "sort": "desc"}
+    )
+
+    assert result == items[0]
+    url = _single_request_url(mock_api)
+    assert dict(url.query) == {"per_page": "1", "order_by": "created_at", "sort": "desc"}
 
 
 async def test_get_first_empty_returns_none(

@@ -257,6 +257,33 @@ async def test_projects_step_invalid_custom_project(
     assert result["options"][CONF_PROJECTS] == ["missing/repo"]
 
 
+async def test_projects_step_custom_project_generic_api_error(
+    hass: HomeAssistant,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_setup_entry: AsyncMock,
+) -> None:
+    """A generic API error validating a custom project (not just 404) also lands
+    it in invalid_projects - the except GitLabApiError branch, not just NotFound."""
+    patch_client_defaults(monkeypatch)
+    monkeypatch.setattr(
+        GitLabClient,
+        "async_get_project",
+        AsyncMock(side_effect=GitLabApiError("HTTP 500")),
+    )
+
+    result = await _start_user_flow(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], USER_INPUT
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {CONF_PROJECTS: [], CONF_CUSTOM_PROJECTS: "broken/repo"},
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"base": "invalid_projects"}
+    assert result["description_placeholders"]["invalid_projects"] == "broken/repo"
+
+
 async def test_projects_step_empty_selection(
     hass: HomeAssistant,
     monkeypatch: pytest.MonkeyPatch,
@@ -373,6 +400,37 @@ async def test_reauth_invalid_auth_and_recovery(
     assert mock_config_entry.data[CONF_TOKEN] == "glpat-good"
 
 
+@pytest.mark.parametrize(
+    ("exception", "expected_error"),
+    [
+        (GitLabConnectionError("timeout"), "cannot_connect"),
+        (GitLabApiError("HTTP 500"), "unknown"),
+    ],
+)
+async def test_reauth_connection_errors(
+    hass: HomeAssistant,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_config_entry: MockConfigEntry,
+    mock_setup_entry: AsyncMock,
+    exception: Exception,
+    expected_error: str,
+) -> None:
+    """Connection/generic errors during reauth show the matching form error."""
+    mock_config_entry.add_to_hass(hass)
+    patch_client_defaults(monkeypatch)
+    monkeypatch.setattr(
+        GitLabClient, "async_get_current_user", AsyncMock(side_effect=exception)
+    )
+
+    result = await mock_config_entry.start_reauth_flow(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_TOKEN: "glpat-new"}
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"base": expected_error}
+    assert mock_config_entry.data[CONF_TOKEN] == TEST_TOKEN
+
+
 async def test_reauth_wrong_account_aborts(
     hass: HomeAssistant,
     monkeypatch: pytest.MonkeyPatch,
@@ -433,6 +491,40 @@ async def test_reconfigure_success(
         CONF_TOKEN: "glpat-rotated",
         CONF_VERIFY_SSL: False,
     }
+
+
+@pytest.mark.parametrize(
+    ("exception", "expected_error"),
+    [
+        (GitLabAuthError("bad token"), "invalid_auth"),
+        (GitLabConnectionError("timeout"), "cannot_connect"),
+        (GitLabApiError("HTTP 500"), "unknown"),
+    ],
+)
+async def test_reconfigure_connection_errors(
+    hass: HomeAssistant,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_config_entry: MockConfigEntry,
+    mock_setup_entry: AsyncMock,
+    exception: Exception,
+    expected_error: str,
+) -> None:
+    """Auth/connection/generic errors during reconfigure show the matching form
+    error and leave the entry untouched."""
+    mock_config_entry.add_to_hass(hass)
+    patch_client_defaults(monkeypatch)
+    monkeypatch.setattr(
+        GitLabClient, "async_get_current_user", AsyncMock(side_effect=exception)
+    )
+
+    result = await mock_config_entry.start_reconfigure_flow(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {CONF_URL: TEST_URL, CONF_TOKEN: "glpat-new", CONF_VERIFY_SSL: True},
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"base": expected_error}
+    assert mock_config_entry.data[CONF_TOKEN] == TEST_TOKEN
 
 
 async def test_reconfigure_wrong_account_aborts(
@@ -498,6 +590,34 @@ async def test_options_flow_updates_options(
     }
 
 
+async def test_options_flow_custom_project_already_selected_is_deduped(
+    hass: HomeAssistant,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Re-entering an already ticked project in the free-text field is silently
+    skipped (not re-validated, not duplicated) - the `if key in selected: continue`
+    branch, distinct from the invalid/empty error paths."""
+    patch_client_defaults(monkeypatch)
+    get_project = AsyncMock(return_value=make_project_info())
+    monkeypatch.setattr(GitLabClient, "async_get_project", get_project)
+    mock_config_entry.add_to_hass(hass)
+
+    result = await hass.config_entries.options.async_init(mock_config_entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {
+            CONF_PROJECTS: [TEST_PROJECT],
+            CONF_CUSTOM_PROJECTS: TEST_PROJECT,
+            CONF_SCAN_INTERVAL_MINUTES: 5,
+        },
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["data"][CONF_PROJECTS] == [TEST_PROJECT]
+    # The duplicate was never even looked up.
+    get_project.assert_not_awaited()
+
+
 async def test_options_flow_invalid_custom_project(
     hass: HomeAssistant,
     monkeypatch: pytest.MonkeyPatch,
@@ -549,3 +669,24 @@ async def test_options_flow_empty_selection(
     )
     assert result["type"] is FlowResultType.FORM
     assert result["errors"] == {"base": "no_projects"}
+
+
+async def test_options_flow_membership_fetch_failure_still_opens(
+    hass: HomeAssistant,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """If listing memberships fails when opening the options form, it degrades to
+    an empty membership list instead of crashing the flow - the currently
+    configured project(s) are still offered as options."""
+    patch_client_defaults(monkeypatch)
+    monkeypatch.setattr(
+        GitLabClient,
+        "async_list_membership_projects",
+        AsyncMock(side_effect=GitLabApiError("HTTP 500")),
+    )
+    mock_config_entry.add_to_hass(hass)
+
+    result = await hass.config_entries.options.async_init(mock_config_entry.entry_id)
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "init"

@@ -298,3 +298,38 @@ async def test_partial_project_failure_keeps_good_project(
     assert TEST_PROJECT in coordinator.data
     assert "group/gone" not in coordinator.data
     assert "Error updating project group/gone" in caplog.text
+
+
+async def test_guarded_subfetch_auth_error_fails_only_that_project(
+    hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A GUARDED sub-fetch (not the top-level async_get_project call) raising
+    GitLabAuthError propagates out of _guarded (re-raised, not swallowed) - unlike
+    every other exception type, which _guarded logs and turns into a None field.
+    A good project alongside it still comes through fine."""
+    patch_client_defaults(monkeypatch)
+
+    bad_id = 999
+
+    async def get_project(key: str) -> dict[str, Any]:
+        if key == "group/bad":
+            return make_project_info(id=bad_id, path_with_namespace="group/bad")
+        return make_project_info()
+
+    async def get_pipeline(project_id: int):
+        if project_id == bad_id:
+            raise GitLabAuthError("HTTP 401")
+
+    monkeypatch.setattr(
+        GitLabClient, "async_get_project", AsyncMock(side_effect=get_project)
+    )
+    monkeypatch.setattr(
+        GitLabClient, "async_get_latest_pipeline", AsyncMock(side_effect=get_pipeline)
+    )
+
+    coordinator = _make_coordinator(hass, _make_entry([TEST_PROJECT, "group/bad"]))
+    await coordinator.async_refresh()
+
+    assert coordinator.last_update_success
+    assert TEST_PROJECT in coordinator.data
+    assert "group/bad" not in coordinator.data

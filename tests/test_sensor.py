@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 from typing import Any
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from homeassistant.config_entries import RELOAD_AFTER_UPDATE_DELAY
@@ -25,7 +25,7 @@ from custom_components.gitlab_monitor.const import (
     DOMAIN,
 )
 from custom_components.gitlab_monitor.coordinator import GitLabProjectData
-from custom_components.gitlab_monitor.sensor import SENSORS
+from custom_components.gitlab_monitor.sensor import SENSORS, GitLabSensor
 
 from .conftest import (
     TEST_PROJECT,
@@ -346,6 +346,27 @@ async def test_coverage_unparseable(hass, monkeypatch, mock_config_entry) -> Non
     assert status.state == "success"
 
 
+async def test_coverage_non_numeric_string_yields_unknown(
+    hass, monkeypatch, mock_config_entry
+) -> None:
+    """A genuinely malformed (non-numeric) coverage string hits the float()
+    ValueError branch specifically, not just the missing-value early return."""
+    entry = await _setup(
+        hass,
+        monkeypatch,
+        mock_config_entry,
+        overrides={
+            "async_get_latest_pipeline": AsyncMock(
+                return_value=make_pipeline(coverage="not-a-number")
+            )
+        },
+    )
+
+    coverage = hass.states.get(_entity_id(hass, entry, "coverage"))
+    assert coverage is not None
+    assert coverage.state == STATE_UNKNOWN
+
+
 async def test_disabled_by_default_entities(
     hass, monkeypatch, mock_config_entry
 ) -> None:
@@ -538,3 +559,48 @@ async def test_unavailable_when_project_disappears(
         state = hass.states.get(_entity_id(hass, entry, suffix))
         assert state is not None
         assert state.state == STATE_UNAVAILABLE, f"{suffix} is {state.state!r}"
+
+
+async def test_enabled_tag_and_fetches_with_no_data_are_unknown(
+    hass, monkeypatch, mock_config_entry
+) -> None:
+    """latest_tag/fetches_30d enabled WITHOUT rich data - _tag_attrs/_fetch_attrs'
+    own "no data" early returns (not just the disabled-by-default state)."""
+    entry = await _setup(hass, monkeypatch, mock_config_entry)  # rich=False (default)
+    registry = er.async_get(hass)
+
+    entity_ids = {
+        suffix: _entity_id(hass, entry, suffix) for suffix in ("latest_tag", "fetches_30d")
+    }
+    for entity_id in entity_ids.values():
+        registry.async_update_entity(entity_id, disabled_by=None)
+    await hass.async_block_till_done()
+    async_fire_time_changed(
+        hass, dt_util.utcnow() + timedelta(seconds=RELOAD_AFTER_UPDATE_DELAY)
+    )
+    await hass.async_block_till_done()
+
+    tag = hass.states.get(entity_ids["latest_tag"])
+    assert tag is not None
+    assert tag.state == STATE_UNKNOWN
+    assert tag.attributes.get("message") is None
+
+    fetches = hass.states.get(entity_ids["fetches_30d"])
+    assert fetches is not None
+    assert fetches.state == STATE_UNKNOWN
+    assert fetches.attributes.get("days") is None
+
+
+def test_native_value_and_attrs_return_none_when_project_unavailable() -> None:
+    """native_value/extra_state_attributes' own project-is-None guards - direct unit
+    tests, since HA doesn't call them once `available` is already False."""
+    coordinator = Mock()
+    coordinator.config_entry.entry_id = "entry123"
+    coordinator.data = {
+        TEST_PROJECT: GitLabProjectData(key=TEST_PROJECT, info=make_project_info())
+    }
+    entity = GitLabSensor(coordinator, TEST_PROJECT, SENSORS[0])
+
+    coordinator.data = {}  # project dropped out of the data after construction
+    assert entity.native_value is None
+    assert entity.extra_state_attributes is None

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from typing import Any
+from unittest.mock import Mock
 
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.const import STATE_OFF, STATE_ON, STATE_UNKNOWN
@@ -9,9 +10,20 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
 from custom_components.gitlab_monitor.api import GitLabClient
+from custom_components.gitlab_monitor.binary_sensor import (
+    BINARY_SENSORS,
+    GitLabBinarySensor,
+)
 from custom_components.gitlab_monitor.const import DOMAIN
+from custom_components.gitlab_monitor.coordinator import GitLabProjectData
 
-from .conftest import TEST_PROJECT_ID, make_pipeline, setup_integration
+from .conftest import (
+    TEST_PROJECT,
+    TEST_PROJECT_ID,
+    make_pipeline,
+    make_project_info,
+    setup_integration,
+)
 
 
 def _entity_id(hass: HomeAssistant, entry, suffix: str) -> str:
@@ -109,3 +121,18 @@ async def test_device_classes_and_unique_ids(
     assert (
         running_state.attributes["device_class"] == BinarySensorDeviceClass.RUNNING
     )
+
+
+def test_is_on_returns_none_when_project_unavailable() -> None:
+    """is_on's own project-is-None guard - a direct unit test, since HA's entity base
+    class doesn't call is_on at all once `available` is already False (the normal path
+    a real integration test would exercise never actually reaches this line)."""
+    coordinator = Mock()
+    coordinator.config_entry.entry_id = "entry123"
+    coordinator.data = {
+        TEST_PROJECT: GitLabProjectData(key=TEST_PROJECT, info=make_project_info())
+    }
+    entity = GitLabBinarySensor(coordinator, TEST_PROJECT, BINARY_SENSORS[0])
+
+    coordinator.data = {}  # project dropped out of the data after construction
+    assert entity.is_on is None
