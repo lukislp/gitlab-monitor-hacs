@@ -1,8 +1,8 @@
 # GitLab Monitor for Home Assistant
 
-[![CI/CD](https://github.com/lukislp/gitlab-monitor/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/lukislp/gitlab-monitor/actions/workflows/ci-cd.yml)
-[![Release](https://img.shields.io/github/v/release/lukislp/gitlab-monitor)](https://github.com/lukislp/gitlab-monitor/releases)
-[![License: MIT](https://img.shields.io/github/license/lukislp/gitlab-monitor)](LICENSE)
+[![CI/CD](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml)
+[![Release](https://img.shields.io/github/v/release/lukislp/gitlab-monitor-hacs)](https://github.com/lukislp/gitlab-monitor-hacs/releases)
+[![License: MIT](https://img.shields.io/github/license/lukislp/gitlab-monitor-hacs)](LICENSE)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
 
 A custom integration that monitors GitLab repositories — on **gitlab.com** or any **self-hosted** GitLab instance. Fully UI-configurable (config flow), no YAML required and no external Python dependencies.
@@ -52,7 +52,7 @@ A custom integration that monitors GitLab repositories — on **gitlab.com** or 
 3. Go to **Settings → Devices & Services → Add Integration** and search for **GitLab Monitor**.
 
 ### HACS (custom repository)
-In HACS, add `https://github.com/lukislp/gitlab-monitor` as a custom repository of type *Integration*, then install **GitLab Monitor** and restart Home Assistant.
+In HACS, add `https://github.com/lukislp/gitlab-monitor-hacs` as a custom repository of type *Integration*, then install **GitLab Monitor** and restart Home Assistant.
 
 ## Integration icon (Devices & Services)
 

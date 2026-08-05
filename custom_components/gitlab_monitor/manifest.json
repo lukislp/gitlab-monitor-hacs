@@ -4,10 +4,10 @@
   "codeowners": ["@lukislp"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/lukislp/gitlab-monitor",
+  "documentation": "https://github.com/lukislp/gitlab-monitor-hacs",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/lukislp/gitlab-monitor/issues",
+  "issue_tracker": "https://github.com/lukislp/gitlab-monitor-hacs/issues",
   "requirements": [],
   "version": "1.0.0"
 }
