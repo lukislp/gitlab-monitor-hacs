@@ -1,0 +1,13 @@
+{
+  "domain": "gitlab_monitor",
+  "name": "GitLab Monitor",
+  "codeowners": ["@lukislp"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/lukislp/gitlab-monitor",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/lukislp/gitlab-monitor/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

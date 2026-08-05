@@ -1,0 +1,50 @@
+# Logs
+*.log
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Home Assistant specific
+.HA_VERSION
+home-assistant.log
+home-assistant_v2.db
+*.db-journal
+
+# Secrets
+secrets.yaml
+*.key
+*.pem
+
+# Temporary
+*.tmp
+*.bak
+.cache/

@@ -1,0 +1,173 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to GitLab",
+        "description": "Enter your GitLab instance URL and a Personal Access Token with at least the `read_api` scope. Create one under **User Settings → Access Tokens** on your GitLab instance.",
+        "data": {
+          "url": "GitLab URL",
+          "token": "Personal Access Token",
+          "verify_ssl": "Verify SSL certificate"
+        }
+      },
+      "projects": {
+        "title": "Select projects",
+        "description": "Choose the projects to monitor from your memberships, or add additional projects by path (e.g. `group/project`) or numeric ID — one per line or comma separated. {invalid_projects}",
+        "data": {
+          "projects": "Your projects",
+          "custom_projects": "Additional projects (path or ID)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate GitLab",
+        "description": "The token for {url} is invalid or expired. Enter a new Personal Access Token.",
+        "data": {
+          "token": "Personal Access Token"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure GitLab connection",
+        "data": {
+          "url": "GitLab URL",
+          "token": "Personal Access Token",
+          "verify_ssl": "Verify SSL certificate"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the GitLab instance",
+      "invalid_auth": "Invalid authentication — check the token and its scopes (read_api required)",
+      "invalid_projects": "These projects were not found or are not accessible: {invalid_projects}",
+      "no_projects": "Select or enter at least one project",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This GitLab account is already configured",
+      "reauth_successful": "Re-authentication was successful",
+      "reconfigure_successful": "Reconfiguration was successful",
+      "wrong_account": "The token belongs to a different account or instance"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "GitLab Monitor options",
+        "description": "Manage monitored projects and the polling interval. {invalid_projects}",
+        "data": {
+          "projects": "Monitored projects",
+          "custom_projects": "Additional projects (path or ID)",
+          "scan_interval_minutes": "Update interval (minutes)"
+        }
+      }
+    },
+    "error": {
+      "invalid_projects": "These projects were not found or are not accessible: {invalid_projects}",
+      "no_projects": "Select or enter at least one project"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pipeline_status": {
+        "name": "Pipeline status",
+        "state": {
+          "created": "Created",
+          "waiting_for_resource": "Waiting for resource",
+          "preparing": "Preparing",
+          "pending": "Pending",
+          "running": "Running",
+          "success": "Success",
+          "failed": "Failed",
+          "canceled": "Canceled",
+          "skipped": "Skipped",
+          "manual": "Manual",
+          "scheduled": "Scheduled",
+          "waiting_for_callback": "Waiting for callback"
+        }
+      },
+      "pipeline_duration": {
+        "name": "Pipeline duration"
+      },
+      "open_issues": {
+        "name": "Open issues",
+        "unit_of_measurement": "issues"
+      },
+      "open_merge_requests": {
+        "name": "Open merge requests",
+        "unit_of_measurement": "MRs"
+      },
+      "branches": {
+        "name": "Branches",
+        "unit_of_measurement": "branches"
+      },
+      "stars": {
+        "name": "Stars",
+        "unit_of_measurement": "stars"
+      },
+      "forks": {
+        "name": "Forks",
+        "unit_of_measurement": "forks"
+      },
+      "last_commit": {
+        "name": "Last commit"
+      },
+      "last_activity": {
+        "name": "Last activity"
+      },
+      "latest_release": {
+        "name": "Latest release"
+      },
+      "latest_tag": {
+        "name": "Latest tag"
+      },
+      "coverage": {
+        "name": "Pipeline coverage"
+      },
+      "latest_issue": {
+        "name": "Latest issue"
+      },
+      "latest_merge_request": {
+        "name": "Latest merge request"
+      },
+      "latest_deployment": {
+        "name": "Latest deployment"
+      },
+      "contributors": {
+        "name": "Contributors"
+      },
+      "members": {
+        "name": "Members"
+      },
+      "commit_count": {
+        "name": "Commits"
+      },
+      "releases_count": {
+        "name": "Releases"
+      },
+      "tags_count": {
+        "name": "Tags"
+      },
+      "repository_size": {
+        "name": "Repository size"
+      },
+      "storage_size": {
+        "name": "Total storage size"
+      },
+      "fetches_30d": {
+        "name": "Fetches (30 days)"
+      }
+    },
+    "binary_sensor": {
+      "pipeline_failed": {
+        "name": "Pipeline failed"
+      },
+      "pipeline_running": {
+        "name": "Pipeline running"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      }
+    }
+  }
+}
