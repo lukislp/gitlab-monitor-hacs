@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.0...v1.1.1) (2026-08-05)
+
+
+### Bug Fixes
+
+* close every remaining coverage gap, 96% -> 100% ([1f139c0](https://github.com/lukislp/gitlab-monitor-hacs/commit/1f139c0541028725dc7a1380039701ecabcdf2a5))
+
 # [1.1.0](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.0.0...v1.1.0) (2026-08-05)
 
 
