@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.0.0...v1.1.0) (2026-08-05)
+
+
+### Features
+
+* add a self-hosted test coverage badge ([1b7fc17](https://github.com/lukislp/gitlab-monitor-hacs/commit/1b7fc17eecb1de8d88294e53c80d9f6d3c607a91))
+
 # 1.0.0 (2026-08-05)
 
 
