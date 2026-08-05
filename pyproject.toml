@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# Naive datetimes are fine in tests: entity code parses GitLab's ISO timestamps itself,
+# and fixtures mirror exactly what the API returns.
+"tests/*" = ["DTZ001"]
