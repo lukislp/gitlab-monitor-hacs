@@ -4,6 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/lukislp/gitlab-monitor-hacs)](https://github.com/lukislp/gitlab-monitor-hacs/releases)
 [![License: MIT](https://img.shields.io/github/license/lukislp/gitlab-monitor-hacs)](LICENSE)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
+[![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/lukislp/gitlab-monitor-hacs/main/.github/badges/coverage.json)](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml)
 
 A custom integration that monitors GitLab repositories — on **gitlab.com** or any **self-hosted** GitLab instance. Fully UI-configurable (config flow), no YAML required and no external Python dependencies.
 
