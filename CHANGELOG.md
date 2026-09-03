@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.1...v1.1.2) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ci:** add Dependabot for github-actions, pip ([b58f306](https://github.com/lukislp/gitlab-monitor-hacs/commit/b58f306f9cb71fdb5d184dceb5c5dcb60b4d794f))
+
 ## [1.1.1](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.0...v1.1.1) (2026-08-05)
 
 
