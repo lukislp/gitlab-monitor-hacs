@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.3...v1.1.4) (2026-09-11)
+
+
+### Bug Fixes
+
+* **ci:** read-only GITHUB_TOKEN in the Dependabot auto-merge workflow ([8a9babc](https://github.com/lukislp/gitlab-monitor-hacs/commit/8a9babc2aaad89094b819f1cc0ad11a7fa1cdb8f))
+
 ## [1.1.3](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.2...v1.1.3) (2026-09-11)
 
 
