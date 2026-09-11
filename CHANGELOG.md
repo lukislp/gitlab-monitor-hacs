@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.2...v1.1.3) (2026-09-11)
+
+
+### Bug Fixes
+
+* **ci:** push release commits as a deploy key so the default branch can be ruleset-protected ([ee83c87](https://github.com/lukislp/gitlab-monitor-hacs/commit/ee83c87c05212c961207664c1cf39f42c3bd2a76))
+
 ## [1.1.2](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.1...v1.1.2) (2026-09-03)
 
 
