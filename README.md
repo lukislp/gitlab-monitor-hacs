@@ -1,6 +1,6 @@
 # GitLab Monitor for Home Assistant
 
-[![CI/CD](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml)
+[![CI/CD](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/ci-cd.yml) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/lukislp/gitlab-monitor-hacs/badge)](https://scorecard.dev/viewer/?uri=github.com/lukislp/gitlab-monitor-hacs) [![CodeQL](https://github.com/lukislp/gitlab-monitor-hacs/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/lukislp/gitlab-monitor-hacs/security/code-scanning)
 [![Release](https://img.shields.io/github/v/release/lukislp/gitlab-monitor-hacs)](https://github.com/lukislp/gitlab-monitor-hacs/releases)
 [![License: MIT](https://img.shields.io/github/license/lukislp/gitlab-monitor-hacs)](LICENSE)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
