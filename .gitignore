@@ -50,3 +50,8 @@ secrets.yaml
 *.tmp
 *.bak
 .cache/
+
+# libFuzzer crash artifacts written by fuzz/ harnesses
+crash-*
+leak-*
+timeout-*

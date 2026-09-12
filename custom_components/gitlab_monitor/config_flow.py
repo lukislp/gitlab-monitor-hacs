@@ -74,7 +74,11 @@ def _parse_custom_projects(raw: str) -> list[str]:
     """Split a comma/newline separated string into project keys."""
     items: list[str] = []
     for chunk in raw.replace("\n", ",").split(","):
-        key = chunk.strip().strip("/")
+        # Strip whitespace and slashes until nothing changes: one pass each left
+        # "/ group/project" as " group/project" (found by fuzz/fuzz_parsers.py).
+        key = chunk
+        while (stripped := key.strip().strip("/")) != key:
+            key = stripped
         if key and key not in items:
             items.append(key)
     return items
