@@ -435,8 +435,8 @@ async def test_unique_ids_and_device(hass, monkeypatch, mock_config_entry) -> No
     entity_registry = er.async_get(hass)
     device_registry = dr.async_get(hass)
 
-    device = device_registry.async_get_device(
-        identifiers={(DOMAIN, f"{entry.entry_id}_{TEST_PROJECT_ID}")}
+    device = device_registry.async_get_device_by_identifier(
+        (DOMAIN, f"{entry.entry_id}_{TEST_PROJECT_ID}"), entry.entry_id
     )
     assert device is not None
     assert device.name == TEST_PROJECT
@@ -485,8 +485,8 @@ async def test_dynamic_project_addition_via_listener(
     assert status is not None
     assert status.state == STATE_UNKNOWN
 
-    device = dr.async_get(hass).async_get_device(
-        identifiers={(DOMAIN, f"{entry.entry_id}_99")}
+    device = dr.async_get(hass).async_get_device_by_identifier(
+        (DOMAIN, f"{entry.entry_id}_99"), entry.entry_id
     )
     assert device is not None
     assert device.name == "group/other"
