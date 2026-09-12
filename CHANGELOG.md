@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.5...v1.1.6) (2026-09-12)
+
+
+### Bug Fixes
+
+* **config-flow:** strip whitespace and slashes from project keys until nothing changes ([#15](https://github.com/lukislp/gitlab-monitor-hacs/issues/15)) ([c8288b2](https://github.com/lukislp/gitlab-monitor-hacs/commit/c8288b25b1fd0f49f1dacbbf8448ffc0e7d6174c))
+
 ## [1.1.5](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.4...v1.1.5) (2026-09-12)
 
 
