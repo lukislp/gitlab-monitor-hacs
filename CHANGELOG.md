@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.6...v1.1.7) (2026-09-12)
+
+
+### Bug Fixes
+
+* **ci:** check out the tip of main in the release jobs, as the comment already describes ([#16](https://github.com/lukislp/gitlab-monitor-hacs/issues/16)) ([f02e72b](https://github.com/lukislp/gitlab-monitor-hacs/commit/f02e72b282c5fc1baffba59c95aad22b529ab9ae))
+
 ## [1.1.6](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.5...v1.1.6) (2026-09-12)
 
 
