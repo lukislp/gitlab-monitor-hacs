@@ -107,6 +107,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # ref: main (branch tip), NOT the push-event SHA: "[skip ci]" commits can land on
+          # main between the triggering push and this job actually running. semantic-release's
+          # "local branch is behind the remote" guard then analyzes a stale SHA and releases
+          # nothing - the entire release chain skips even though a releasable fix was just
+          # merged. Analyzing the branch tip makes the verdict immune to that race.
+          ref: main
           fetch-depth: 0
       # Ruleset bypass for the release commit (2026-09-11 main-protection rollout): main is
       # protected by a ruleset (pull request + green test stage) that the GitHub Actions app
@@ -161,6 +167,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # ref: main for the same reason as get-version's checkout: the real release must be
+          # cut from the branch tip get-version analyzed, or the "behind the remote" guard trips
+          # whenever a [skip ci] commit raced in.
+          ref: main
           fetch-depth: 0
       # Ruleset bypass for the release commit (2026-09-11 main-protection rollout): main is
       # protected by a ruleset (pull request + green test stage) that the GitHub Actions app
