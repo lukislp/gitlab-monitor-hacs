@@ -1,3 +1,11 @@
+## [1.1.5](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.4...v1.1.5) (2026-09-12)
+
+
+### Bug Fixes
+
+* **ci:** bump dependabot/fetch-metadata from 2.5.0 to 3.1.0 ([7aff80f](https://github.com/lukislp/gitlab-monitor-hacs/commit/7aff80fef02436fce1471882f5059ff23ee97af1))
+* **ci:** bump github/codeql-action/upload-sarif from 3.38.0 to 4.38.0 ([f330b4a](https://github.com/lukislp/gitlab-monitor-hacs/commit/f330b4ac9c18eaee23f40f8dab49af50f396989b))
+
 ## [1.1.4](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.3...v1.1.4) (2026-09-11)
 
 
