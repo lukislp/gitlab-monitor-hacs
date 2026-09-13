@@ -1,4 +1,5 @@
 """Tests for the GitLab Monitor sensor platform."""
+
 from __future__ import annotations
 
 from datetime import timedelta
@@ -62,9 +63,7 @@ TEST_FETCH_STATISTICS = {
     "fetches": {"total": 120, "days": [{"count": 4, "date": "2026-08-01"}]}
 }
 
-DISABLED_KEYS = {
-    d.key for d in SENSORS if not d.entity_registry_enabled_default
-}
+DISABLED_KEYS = {d.key for d in SENSORS if not d.entity_registry_enabled_default}
 ENABLED_KEYS = {d.key for d in SENSORS} - DISABLED_KEYS
 
 
@@ -188,9 +187,7 @@ async def test_enabled_sensor_states(hass, monkeypatch, mock_config_entry) -> No
         assert state.state == value, f"{suffix}: {state.state!r} != {value!r}"
 
 
-async def test_pipeline_status_attributes(
-    hass, monkeypatch, mock_config_entry
-) -> None:
+async def test_pipeline_status_attributes(hass, monkeypatch, mock_config_entry) -> None:
     """The pipeline status sensor exposes the pipeline details as attributes."""
     entry = await _setup(hass, monkeypatch, mock_config_entry, rich=True)
 
@@ -230,17 +227,14 @@ async def test_latest_issue_and_merge_request_attributes(
     assert mr.attributes["author"] == "tester"
     assert mr.attributes["source_branch"] == "feature/thing"
     assert mr.attributes["target_branch"] == "main"
-    assert (
-        mr.attributes["web_url"] == f"{TEST_URL}/{TEST_PROJECT}/-/merge_requests/8"
-    )
+    assert mr.attributes["web_url"] == f"{TEST_URL}/{TEST_PROJECT}/-/merge_requests/8"
 
     release = hass.states.get(_entity_id(hass, entry, "latest_release"))
     assert release is not None
     assert release.state == "v1.2.3"
     assert release.attributes["total_releases"] == 2
     assert (
-        release.attributes["web_url"]
-        == f"{TEST_URL}/{TEST_PROJECT}/-/releases/v1.2.3"
+        release.attributes["web_url"] == f"{TEST_URL}/{TEST_PROJECT}/-/releases/v1.2.3"
     )
 
     commit = hass.states.get(_entity_id(hass, entry, "last_commit"))
@@ -393,9 +387,7 @@ async def test_disabled_by_default_entities(
         assert hass.states.get(entity_id) is None, f"{suffix} has a state"
 
 
-async def test_enabling_disabled_entities(
-    hass, monkeypatch, mock_config_entry
-) -> None:
+async def test_enabling_disabled_entities(hass, monkeypatch, mock_config_entry) -> None:
     """Enabling a default-disabled sensor and reloading produces its state."""
     entry = await _setup(hass, monkeypatch, mock_config_entry, rich=True)
     registry = er.async_get(hass)
@@ -479,9 +471,7 @@ async def test_dynamic_project_addition_via_listener(
     assert stars is not None
     assert stars.state == "9"
     # New project's pipeline data is absent, so its status is unknown.
-    status = hass.states.get(
-        _entity_id(hass, entry, "pipeline_status", project_id=99)
-    )
+    status = hass.states.get(_entity_id(hass, entry, "pipeline_status", project_id=99))
     assert status is not None
     assert status.state == STATE_UNKNOWN
 
@@ -530,9 +520,7 @@ async def test_dynamic_project_addition_via_options(
     )
     await hass.async_block_till_done()
 
-    new_issues = hass.states.get(
-        _entity_id(hass, entry, "open_issues", project_id=99)
-    )
+    new_issues = hass.states.get(_entity_id(hass, entry, "open_issues", project_id=99))
     assert new_issues is not None
     assert new_issues.state == "7"
     original = hass.states.get(_entity_id(hass, entry, "open_issues"))
@@ -570,7 +558,8 @@ async def test_enabled_tag_and_fetches_with_no_data_are_unknown(
     registry = er.async_get(hass)
 
     entity_ids = {
-        suffix: _entity_id(hass, entry, suffix) for suffix in ("latest_tag", "fetches_30d")
+        suffix: _entity_id(hass, entry, suffix)
+        for suffix in ("latest_tag", "fetches_30d")
     }
     for entity_id in entity_ids.values():
         registry.async_update_entity(entity_id, disabled_by=None)

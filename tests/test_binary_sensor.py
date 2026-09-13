@@ -1,4 +1,5 @@
 """Tests for the GitLab Monitor binary sensor platform."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -66,21 +67,33 @@ async def test_pipeline_running(hass: HomeAssistant, monkeypatch, mock_config_en
     entry = await setup_integration(hass, monkeypatch, mock_config_entry)
     await _refresh_with_pipeline(hass, entry, make_pipeline(status="running"))
 
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_ON
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_ON
+    )
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
+    )
 
     # "pending" is one of the other running-ish states.
     await _refresh_with_pipeline(hass, entry, make_pipeline(status="pending"))
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_ON
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_ON
+    )
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
+    )
 
 
 async def test_pipeline_success(hass: HomeAssistant, monkeypatch, mock_config_entry):
     """A successful pipeline (the fixture default) leaves both sensors off."""
     entry = await setup_integration(hass, monkeypatch, mock_config_entry)
 
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
-    assert hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_OFF
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_failed")).state == STATE_OFF
+    )
+    assert (
+        hass.states.get(_entity_id(hass, entry, "pipeline_running")).state == STATE_OFF
+    )
 
 
 async def test_no_pipeline(hass: HomeAssistant, monkeypatch, mock_config_entry):
@@ -115,12 +128,8 @@ async def test_device_classes_and_unique_ids(
 
     failed_state = hass.states.get(failed_id)
     running_state = hass.states.get(running_id)
-    assert (
-        failed_state.attributes["device_class"] == BinarySensorDeviceClass.PROBLEM
-    )
-    assert (
-        running_state.attributes["device_class"] == BinarySensorDeviceClass.RUNNING
-    )
+    assert failed_state.attributes["device_class"] == BinarySensorDeviceClass.PROBLEM
+    assert running_state.attributes["device_class"] == BinarySensorDeviceClass.RUNNING
 
 
 def test_is_on_returns_none_when_project_unavailable() -> None:

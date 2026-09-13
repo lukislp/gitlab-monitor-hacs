@@ -234,9 +234,7 @@ class GitLabMonitorConfigFlow(ConfigFlow, domain=DOMAIN):
     # Reauth
     # ------------------------------------------------------------------
 
-    async def async_step_reauth(
-        self, entry_data: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
         """Handle reauthentication when the token expired."""
         return await self.async_step_reauth_confirm()
 
@@ -393,7 +391,8 @@ class GitLabMonitorOptionsFlow(OptionsFlow):
 
         known = {p["path_with_namespace"] for p in membership} | set(current)
         options = [
-            SelectOptionDict(value=key, label=key) for key in sorted(known, key=str.lower)
+            SelectOptionDict(value=key, label=key)
+            for key in sorted(known, key=str.lower)
         ]
         schema = vol.Schema(
             {

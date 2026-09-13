@@ -138,7 +138,11 @@ class GitLabCoordinator(DataUpdateCoordinator[dict[str, GitLabProjectData]]):
                     return await coro
                 except GitLabAuthError:
                     raise
-                except (GitLabConnectionError, GitLabNotFoundError, GitLabApiError) as err:
+                except (
+                    GitLabConnectionError,
+                    GitLabNotFoundError,
+                    GitLabApiError,
+                ) as err:
                     _LOGGER.debug("Partial fetch failed for %s: %s", key, err)
                     return None
 
@@ -175,9 +179,7 @@ class GitLabCoordinator(DataUpdateCoordinator[dict[str, GitLabProjectData]]):
                     {"order_by": "created_at", "sort": "desc"},
                 )
             ),
-            _guarded(
-                self.client.async_count(project_id, "repository/contributors")
-            ),
+            _guarded(self.client.async_count(project_id, "repository/contributors")),
             _guarded(self.client.async_count(project_id, "members/all")),
             _guarded(self.client.async_get_project_statistics(project_id)),
         )

@@ -7,6 +7,7 @@ the entity (its __init__ only reads `coordinator.data[project_key].info` and
 both "coordinator hasn't refreshed yet" (data is None) and "this project dropped out
 of the data" (key missing) - two different early-return branches in `project`.
 """
+
 from __future__ import annotations
 
 from unittest.mock import Mock
