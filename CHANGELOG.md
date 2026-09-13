@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.7...v1.2.0) (2026-09-13)
+
+
+### Features
+
+* require Home Assistant 2026.1 or newer ([#21](https://github.com/lukislp/gitlab-monitor-hacs/issues/21)) ([5c4fb79](https://github.com/lukislp/gitlab-monitor-hacs/commit/5c4fb797dfe680a7673488817010cbcc570b5f07))
+
 ## [1.1.7](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.6...v1.1.7) (2026-09-12)
 
 
