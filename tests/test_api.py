@@ -4,6 +4,7 @@ These tests exercise ``GitLabClient`` against a real ``aiohttp.ClientSession``
 whose transport is intercepted by ``aioresponses`` - no Home Assistant instance
 is required and no network traffic occurs.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -87,9 +88,7 @@ async def test_async_get_current_user(
     _assert_token_sent(mock_api)
 
 
-async def test_async_get_version(
-    client: GitLabClient, mock_api: aioresponses
-) -> None:
+async def test_async_get_version(client: GitLabClient, mock_api: aioresponses) -> None:
     """The /version endpoint JSON is returned as-is."""
     payload = {"version": "17.2.1", "revision": "deadbeef"}
     mock_api.get(f"{API}/version", payload=payload)
@@ -133,9 +132,7 @@ async def test_async_get_project_numeric_id(
 ) -> None:
     """A numeric project ID is passed through and statistics are requested."""
     payload = {"id": TEST_PROJECT_ID, "star_count": 5}
-    mock_api.get(
-        f"{API}/projects/{TEST_PROJECT_ID}?statistics=true", payload=payload
-    )
+    mock_api.get(f"{API}/projects/{TEST_PROJECT_ID}?statistics=true", payload=payload)
 
     assert await client.async_get_project(TEST_PROJECT_ID) == payload
 
@@ -149,9 +146,7 @@ async def test_async_get_project_encodes_path(
 ) -> None:
     """A 'group/project' path is URL-encoded to 'group%2Fproject'."""
     payload = {"id": TEST_PROJECT_ID, "path_with_namespace": TEST_PROJECT}
-    mock_api.get(
-        f"{API}/projects/group%2Fproject?statistics=true", payload=payload
-    )
+    mock_api.get(f"{API}/projects/group%2Fproject?statistics=true", payload=payload)
 
     assert await client.async_get_project(TEST_PROJECT) == payload
 
@@ -311,9 +306,7 @@ async def test_count_uses_x_total_header(
     client: GitLabClient, mock_api: aioresponses
 ) -> None:
     """When x-total is present, its value is returned as an exact count."""
-    mock_api.get(
-        ISSUES_PROBE_URL, payload=[{"iid": 1}], headers={"x-total": "123"}
-    )
+    mock_api.get(ISSUES_PROBE_URL, payload=[{"iid": 1}], headers={"x-total": "123"})
 
     assert await client.async_count(TEST_PROJECT_ID, "issues") == (123, True)
     assert len(_requested_urls(mock_api)) == 1
@@ -330,9 +323,7 @@ async def test_count_merges_extra_params(
         headers={"x-total": "3"},
     )
 
-    result = await client.async_count(
-        TEST_PROJECT_ID, "issues", {"state": "opened"}
-    )
+    result = await client.async_count(TEST_PROJECT_ID, "issues", {"state": "opened"})
 
     assert result == (3, True)
     url = _single_request_url(mock_api)
@@ -344,9 +335,7 @@ async def test_count_fallback_full_page_is_inexact(
 ) -> None:
     """Missing x-total plus a full 100-item page yields a lower bound."""
     mock_api.get(ISSUES_PROBE_URL, payload=[{"iid": 1}])
-    mock_api.get(
-        ISSUES_PAGE_URL, payload=[{"iid": i} for i in range(100)]
-    )
+    mock_api.get(ISSUES_PAGE_URL, payload=[{"iid": i} for i in range(100)])
 
     assert await client.async_count(TEST_PROJECT_ID, "issues") == (100, False)
 
@@ -384,9 +373,7 @@ async def test_get_first_with_total_success(
     item = {"iid": 8, "title": "Add a feature"}
     mock_api.get(MRS_PROBE_URL, payload=[item], headers={"x-total": "5"})
 
-    result = await client.async_get_first_with_total(
-        TEST_PROJECT_ID, "merge_requests"
-    )
+    result = await client.async_get_first_with_total(TEST_PROJECT_ID, "merge_requests")
 
     assert result == (item, 5, True)
 
@@ -397,9 +384,7 @@ async def test_get_first_with_total_empty_list(
     """An empty collection yields (None, 0, True)."""
     mock_api.get(MRS_PROBE_URL, payload=[], headers={"x-total": "0"})
 
-    result = await client.async_get_first_with_total(
-        TEST_PROJECT_ID, "merge_requests"
-    )
+    result = await client.async_get_first_with_total(TEST_PROJECT_ID, "merge_requests")
 
     assert result == (None, 0, True)
 
@@ -411,9 +396,7 @@ async def test_get_first_with_total_missing_header(
     item = {"iid": 8}
     mock_api.get(MRS_PROBE_URL, payload=[item])
 
-    result = await client.async_get_first_with_total(
-        TEST_PROJECT_ID, "merge_requests"
-    )
+    result = await client.async_get_first_with_total(TEST_PROJECT_ID, "merge_requests")
 
     assert result == (item, None, False)
 
@@ -424,9 +407,7 @@ async def test_get_first_with_total_not_found(
     """A 404 yields (None, None, True) instead of raising."""
     mock_api.get(MRS_PROBE_URL, status=404)
 
-    result = await client.async_get_first_with_total(
-        TEST_PROJECT_ID, "merge_requests"
-    )
+    result = await client.async_get_first_with_total(TEST_PROJECT_ID, "merge_requests")
 
     assert result == (None, None, True)
 
@@ -492,7 +473,11 @@ async def test_get_first_merges_extra_params(
 
     assert result == items[0]
     url = _single_request_url(mock_api)
-    assert dict(url.query) == {"per_page": "1", "order_by": "created_at", "sort": "desc"}
+    assert dict(url.query) == {
+        "per_page": "1",
+        "order_by": "created_at",
+        "sort": "desc",
+    }
 
 
 async def test_get_first_empty_returns_none(
@@ -504,10 +489,7 @@ async def test_get_first_empty_returns_none(
         payload=[],
     )
 
-    assert (
-        await client.async_get_first(TEST_PROJECT_ID, "repository/commits")
-        is None
-    )
+    assert await client.async_get_first(TEST_PROJECT_ID, "repository/commits") is None
 
 
 async def test_get_first_not_found_returns_none(
@@ -519,10 +501,7 @@ async def test_get_first_not_found_returns_none(
         status=404,
     )
 
-    assert (
-        await client.async_get_first(TEST_PROJECT_ID, "repository/commits")
-        is None
-    )
+    assert await client.async_get_first(TEST_PROJECT_ID, "repository/commits") is None
 
 
 # ----------------------------------------------------------------------
@@ -535,9 +514,7 @@ async def test_async_get_project_statistics(
 ) -> None:
     """The statistics endpoint JSON is returned as-is."""
     payload = {"fetches": {"total": 50, "days": []}}
-    mock_api.get(
-        f"{API}/projects/{TEST_PROJECT_ID}/statistics", payload=payload
-    )
+    mock_api.get(f"{API}/projects/{TEST_PROJECT_ID}/statistics", payload=payload)
 
     result = await client.async_get_project_statistics(TEST_PROJECT_ID)
 

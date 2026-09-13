@@ -1,4 +1,5 @@
 """Tests for the GitLab Monitor button platform."""
+
 from __future__ import annotations
 
 from homeassistant.const import EntityCategory

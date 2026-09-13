@@ -1,4 +1,5 @@
 """Shared fixtures and test-data builders for the GitLab Monitor test suite."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -173,12 +174,8 @@ def patch_client_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
         "async_get_first_with_total",
         AsyncMock(return_value=(None, 0, True)),
     )
-    monkeypatch.setattr(
-        GitLabClient, "async_count", AsyncMock(return_value=(0, True))
-    )
-    monkeypatch.setattr(
-        GitLabClient, "async_get_first", AsyncMock(return_value=None)
-    )
+    monkeypatch.setattr(GitLabClient, "async_count", AsyncMock(return_value=(0, True)))
+    monkeypatch.setattr(GitLabClient, "async_get_first", AsyncMock(return_value=None))
     monkeypatch.setattr(
         GitLabClient,
         "async_get_project_statistics",

@@ -58,9 +58,7 @@ class GitLabClient:
                 url, headers=self._headers, params=params, timeout=API_TIMEOUT
             ) as resp:
                 if resp.status == 401:
-                    raise GitLabAuthError(
-                        f"Authentication failed for {url} (HTTP 401)"
-                    )
+                    raise GitLabAuthError(f"Authentication failed for {url} (HTTP 401)")
                 if resp.status == 403:
                     raise GitLabForbiddenError(f"Access forbidden: {url}")
                 if resp.status == 404:
@@ -121,9 +119,7 @@ class GitLabClient:
         )
         return data
 
-    async def async_get_latest_pipeline(
-        self, project_id: int
-    ) -> dict[str, Any] | None:
+    async def async_get_latest_pipeline(self, project_id: int) -> dict[str, Any] | None:
         """Return the most recent pipeline of a project, incl. details."""
         data, _ = await self._request(
             f"projects/{project_id}/pipelines", params={"per_page": 1}

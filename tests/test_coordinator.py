@@ -1,4 +1,5 @@
 """Tests for the GitLab Monitor data update coordinator."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -58,9 +59,7 @@ def _make_entry(projects: list[str]) -> MockConfigEntry:
     )
 
 
-def _make_coordinator(
-    hass: HomeAssistant, entry: MockConfigEntry
-) -> GitLabCoordinator:
+def _make_coordinator(hass: HomeAssistant, entry: MockConfigEntry) -> GitLabCoordinator:
     """Add the entry to hass and build a coordinator around a (patched) client."""
     entry.add_to_hass(hass)
     client = GitLabClient(async_get_clientsession(hass), TEST_URL, TEST_TOKEN)

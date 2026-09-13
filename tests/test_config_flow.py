@@ -1,4 +1,5 @@
 """Tests for the GitLab Monitor config, reauth, reconfigure and options flows."""
+
 from __future__ import annotations
 
 from unittest.mock import AsyncMock, patch

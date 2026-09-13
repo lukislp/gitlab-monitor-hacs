@@ -180,9 +180,7 @@ class GitLabSensorEntityDescription(SensorEntityDescription):
     """Describes a GitLab project sensor."""
 
     value_fn: Callable[[GitLabProjectData], Any]
-    attrs_fn: Callable[[GitLabProjectData], Mapping[str, Any] | None] = (
-        lambda _: None
-    )
+    attrs_fn: Callable[[GitLabProjectData], Mapping[str, Any] | None] = lambda _: None
 
 
 SENSORS: tuple[GitLabSensorEntityDescription, ...] = (
@@ -413,8 +411,7 @@ async def async_setup_entry(
                 continue
             known.add(key)
             new_entities.extend(
-                GitLabSensor(coordinator, key, description)
-                for description in SENSORS
+                GitLabSensor(coordinator, key, description) for description in SENSORS
             )
         if new_entities:
             async_add_entities(new_entities)
