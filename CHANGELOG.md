@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.2.0...v1.2.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **deps:** bump pytest-homeassistant-custom-component ([#29](https://github.com/lukislp/gitlab-monitor-hacs/issues/29)) ([cfa242f](https://github.com/lukislp/gitlab-monitor-hacs/commit/cfa242f67ea4489eba8e106660e6c011ee22d388))
+
 # [1.2.0](https://github.com/lukislp/gitlab-monitor-hacs/compare/v1.1.7...v1.2.0) (2026-09-13)
 
 
