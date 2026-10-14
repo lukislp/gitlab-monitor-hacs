@@ -7,7 +7,6 @@ is required and no network traffic occurs.
 
 from __future__ import annotations
 
-import asyncio
 from collections.abc import AsyncGenerator, Generator
 from typing import Any
 
@@ -242,8 +241,8 @@ async def test_client_error_raises_connection_error(
 async def test_timeout_raises_connection_error(
     client: GitLabClient, mock_api: aioresponses
 ) -> None:
-    """asyncio.TimeoutError maps to GitLabConnectionError."""
-    mock_api.get(f"{API}/user", exception=asyncio.TimeoutError())
+    """TimeoutError maps to GitLabConnectionError."""
+    mock_api.get(f"{API}/user", exception=TimeoutError())
 
     with pytest.raises(GitLabConnectionError):
         await client.async_get_current_user()
