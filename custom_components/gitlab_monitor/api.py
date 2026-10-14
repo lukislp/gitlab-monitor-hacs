@@ -6,7 +6,6 @@ Uses Home Assistant's shared aiohttp session and a Personal Access Token
 
 from __future__ import annotations
 
-import asyncio
 from typing import Any
 from urllib.parse import quote
 
@@ -69,7 +68,7 @@ class GitLabClient:
                         f"GitLab API error {resp.status} for {url}: {body[:200]}"
                     )
                 return await resp.json(), resp.headers
-        except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+        except (TimeoutError, aiohttp.ClientError) as err:
             raise GitLabConnectionError(
                 f"Error connecting to GitLab at {self.base_url}: {err}"
             ) from err
