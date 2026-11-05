@@ -70,7 +70,7 @@ instance's `custom_components/` directory and restart.
 Edit the `.in` file, then recompile with `pip-tools` under Python 3.14:
 
 ```bash
-pip-compile --allow-unsafe --generate-hashes --no-emit-index-url --no-index --strip-extras requirements_test.in
+pip-compile --allow-unsafe --generate-hashes --no-emit-index-url --strip-extras requirements_test.in
 ```
 
 ## Security issues
