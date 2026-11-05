@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 from homeassistant.const import CONF_TOKEN, CONF_URL, CONF_VERIFY_SSL
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.gitlab_monitor.api import GitLabClient
 from custom_components.gitlab_monitor.const import (
@@ -16,19 +16,11 @@ from custom_components.gitlab_monitor.const import (
     DOMAIN,
 )
 
-pytest_plugins = "pytest_homeassistant_custom_component"
-
 TEST_URL = "https://gitlab.example.com"
 TEST_TOKEN = "glpat-test-token"
 TEST_PROJECT = "group/project"
 TEST_PROJECT_ID = 42
 TEST_USER = {"id": 7, "username": "tester", "name": "Test User"}
-
-
-@pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):
-    """Make custom_components/ discoverable for every test in this suite."""
-    return
 
 
 @pytest.fixture
