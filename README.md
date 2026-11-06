@@ -48,12 +48,14 @@ A custom integration that monitors GitLab repositories — on **gitlab.com** or 
 ## Installation
 
 ### Manual
-1. Copy the folder `custom_components/gitlab_monitor` into your Home Assistant `config/custom_components/` directory (result: `config/custom_components/gitlab_monitor/`).
+1. Unpack `gitlab_monitor.zip` of a [release](https://github.com/lukislp/gitlab-monitor-hacs/releases) into your Home Assistant `config/custom_components/gitlab_monitor/` directory.
 2. Restart Home Assistant.
 3. Go to **Settings → Devices & Services → Add Integration** and search for **GitLab Monitor**.
 
 ### HACS (custom repository)
-In HACS, add `https://github.com/lukislp/gitlab-monitor-hacs` as a custom repository of type *Integration*, then install **GitLab Monitor** and restart Home Assistant.
+In HACS, add `https://github.com/lukislp/gitlab-monitor-hacs` as a custom repository of type *Integration*, then install **GitLab Monitor** and restart Home Assistant. HACS installs the `gitlab_monitor.zip` of the chosen release.
+
+Each release ships `gitlab_monitor.zip` with `SHA256SUMS`, Sigstore signatures and build provenance (see [SECURITY.md](SECURITY.md)).
 
 ## Integration icon (Devices & Services)
 
