@@ -55,3 +55,6 @@ secrets.yaml
 crash-*
 leak-*
 timeout-*
+
+# Development Home Assistant instance (scripts/develop)
+config/

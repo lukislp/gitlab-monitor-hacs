@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Lukas Koerber
+# SPDX-License-Identifier: MIT
+#
+# Runs a development Home Assistant on port 8123 with custom_components/gitlab_monitor loaded
+# from this checkout. The instance config lives in config/ (git-ignored). On the first start Home
+# Assistant installs missing runtime requirements into config/deps; that is expected.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ ! -d config ]; then
+  mkdir -p config
+fi
+
+if [ ! -f config/configuration.yaml ]; then
+  cat > config/configuration.yaml <<'YAML'
+default_config:
+
+logger:
+  default: info
+  logs:
+    custom_components.gitlab_monitor: debug
+YAML
+fi
+
+# pip installs the console scripts (hass, ruff) into ~/.local/bin when site-packages is read-only.
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# Make custom_components/gitlab_monitor from the checkout importable as a custom integration.
+export PYTHONPATH="${PYTHONPATH:-}:${PWD}/custom_components"
+
+exec hass --config "${PWD}/config" --debug

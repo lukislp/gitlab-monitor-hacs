@@ -86,6 +86,22 @@ PYTHONPATH=. python fuzz/fuzz_parsers.py -max_total_time=30 -rss_limit_mb=1024
 To try the integration against a real Home Assistant, copy `custom_components/gitlab_monitor` into your
 instance's `custom_components/` directory and restart.
 
+### Codespaces / Dev Container
+
+The repository ships a Dev Container (`.devcontainer/`), so "Open in Codespaces" (badge in the
+README) or "Reopen in Container" in VS Code gives you Python 3.14 with the pinned test and lint
+requirements installed, ready to run:
+
+```bash
+pytest tests/ -v --cov=custom_components/gitlab_monitor --cov-report=json:coverage.json
+ruff check . && ruff format --check .
+```
+
+`scripts/develop` starts a development Home Assistant in the foreground with the integration
+loaded from your checkout; port 8123 is forwarded (private) and the first start takes a few
+minutes. Onboarding creates a local owner account. The instance lives in `config/`, which is
+git-ignored.
+
 ### Regenerating a requirements lock
 
 Edit the `.in` file, then recompile with `pip-tools` under Python 3.14:

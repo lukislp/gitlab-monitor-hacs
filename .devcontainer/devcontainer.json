@@ -1,0 +1,35 @@
+{
+  // Codespaces / Dev Container for the GitLab Monitor integration: Python 3.14 with the pinned
+  // test and lint requirements, and a one-command Home Assistant (scripts/develop) on port 8123.
+  "name": "GitLab Monitor (Home Assistant)",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "containerEnv": { "PYTHONDONTWRITEBYTECODE": "1" },
+  "remoteEnv": { "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin" },
+  "forwardPorts": [8123],
+  "portsAttributes": {
+    "8123": {
+      "label": "Home Assistant (scripts/develop)",
+      "onAutoForward": "notify",
+      "visibility": "private"
+    }
+  },
+  "updateContentCommand": "bash .devcontainer/update-content.sh",
+  "postAttachCommand": "bash .devcontainer/post-attach.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "charliermarsh.ruff"],
+      "settings": {
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["tests"],
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  }
+}
