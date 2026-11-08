@@ -91,3 +91,17 @@ actions:
 
 - API calls per project and update cycle: ~13. With many projects, increase the polling interval to stay well within GitLab rate limits.
 - On gitlab.com, exact counts are unavailable for collections larger than 10 000 items; the sensor then reports a lower bound (`count_is_exact: false` attribute).
+
+## Development
+
+### Develop in a Codespace
+
+Click the **Open in GitHub Codespaces** badge above. The Codespace comes with Python 3.14 and the pinned test and lint requirements installed. Home Assistant does **not** start by itself; run it in the Codespace terminal:
+
+```bash
+scripts/develop
+```
+
+The first start takes a few minutes, because Home Assistant installs its frontend and other runtime packages into `config/`. Then open port 8123 in the **Ports** tab (`https://<codespace-name>-8123.app.github.dev`), create a local owner account in the onboarding, and add the integration under **Settings → Devices & Services → Add Integration**. `scripts/develop` loads the integration from your checkout; restart it after a code change.
+
+Run the tests with `pytest tests/ -v --cov=custom_components/gitlab_monitor --cov-report=json:coverage.json`. More in [CONTRIBUTING.md](CONTRIBUTING.md).
